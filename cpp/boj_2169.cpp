@@ -1,0 +1,55 @@
+// 백준 2169 로봇 조종하기 Unsolved
+
+#include <iostream>
+
+using namespace std;
+using pii = pair<int, int>;
+
+constexpr int MX = 1'002;
+constexpr int NINF = -1'100'000'000;
+constexpr pii d[] = {
+    {-1, 0}, {0, -1}, {0, 1} // 0 상 1 좌 2 우
+};
+
+int n, m, dp[3][MX][MX], arr[MX][MX];
+bool visit[MX][MX];
+
+inline int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int run(int r, int c, int dir) {
+    if(r < 1 || c < 1 || r > n || c > m) return 0;
+    if(dp[dir][r][c] != NINF) dp[dir][r][c] = NINF;
+
+    int nr = r + d[dir].first, nc = c + d[dir].second;
+
+    for(int i = 0; i != 3; ++i) {
+        if(visit[nr][nc]) continue;
+        visit[nr][nc] = true;
+        dp[dir][r][c] = max(dp[dir][r][c], run(nr, nc, i));
+        visit[nr][nc] = false;
+    }
+
+    dp[dir][r][c] += arr[r][c];
+    cout << "r, c, dir, dp[dir][r][c] : " << r << ", " << c << ", " << dir << ", " << dp[dir][r][c] << "\n";
+    return dp[dir][r][c];
+}
+
+int main() {
+    cin.tie(0);
+    cout.tie(0);
+    cin.sync_with_stdio(0);
+
+    cin >> n >> m; 
+    for(int i = 1; i <= n; ++i) {
+        for(int j = 1; j <= m; ++j) {
+            cin >> arr[i][j];
+            dp[0][i][j] = dp[1][i][j] = dp[2][i][j] = NINF;
+        }
+    }
+    
+    for(int i = 0; i <= 2; ++i) run(n, m, i);
+    
+    cout << max(dp[0][n][m], max(dp[1][n][m], dp[2][n][m]));
+}
