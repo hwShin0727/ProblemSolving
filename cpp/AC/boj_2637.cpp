@@ -1,4 +1,4 @@
-// 백준 2637 장난감 조립, AC
+// 백준 2637 장난감 조립 AC
 
 #include <iostream>
 #include <vector>
